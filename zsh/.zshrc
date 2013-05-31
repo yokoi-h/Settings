@@ -9,7 +9,7 @@ colors
 # prompt
 
 PROMPT=" %{${fg[yellow]}%}%~%{${reset_color}%} 
-[%n]$ "
+[%n@%m]$ "
 PROMPT2='[%n]> '
 
 # history
