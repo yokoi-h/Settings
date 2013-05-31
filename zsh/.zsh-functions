@@ -1,0 +1,43 @@
+function create_namespace() {
+	if [ $1 = "--help" ]; then
+		echo "create_namespace ns-name veth-name veth-ns-ipaddr"
+		exit 0
+		fi
+		NS=$1
+	ETH=$2
+	NSETH_IP=$3
+	sudo ip netns add ${NS}
+	echo "created namespace : $NS"
+	sudo ip netns exec ${NS} ip link set dev lo up
+	sudo ip netns exec ${NS} ip addr add 127.0.0.1/8 dev lo
+	sudo ip link add name ${ETH} type veth peer name ${ETH}-ns
+	sudo ip link set ${ETH}-ns netns ${NS}
+	sudo ip netns exec ${NS} ip link set ${ETH}-ns up
+	sudo ip netns exec ${NS} ip addr add ${NSETH_IP}/24 dev ${ETH}-ns
+	sudo ip link set ${ETH} up
+	sudo ip netns
+}
+
+function cleanup_namespace() {
+	if [ $1 = "--help" ]; then
+                echo "cleanup_namespace ns-name"
+                exit 0
+        fi
+	NS=$1
+	sudo ip netns delete ${NS}
+}
+
+function create_bridge() {
+	if [ $1 = "--help" ];then
+		echo "create_bridge br-name br-ip"
+		exit 0
+	fi
+	BR=$1
+	BR_IP=$2
+	sudo brctl addbr ${BR}
+	#setfd <bridge> <time> set bridge forward delay
+	sudo brctl setfd ${BR} 0
+	sudo ip link set dev ${BR} up
+	sudo ip addr add ${BR_IP}/24 dev ${BR}
+}
+
