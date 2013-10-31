@@ -101,3 +101,7 @@ PROMPT="%{${fg[yellow]}%}[%n@%m]%{${reset_color}%} %~
 
 setopt prompt_subst
 RPROMPT=$'%{${fg[green]}%}$(my_vcs_info)%{${reset_color}%}'
+
+# alias
+alias history='history-all'
+
