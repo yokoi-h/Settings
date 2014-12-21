@@ -1,60 +1,47 @@
-;; 起動直後のfind-fileのパスを設定する
-; 初期ディレクトリの設定
-; (cd "~/shared/ProjectData/")
+(load-theme 'manoj-dark t)
 
-;; input method
-(setq  default-input-method "MacOSX")
-
-;; load library
-(setq load-path (cons "~/Library/emacs" load-path))
-(setq load-path (cons "~/Library/emacs/color-theme/color-theme-6.6.0" load-path))
-(setq load-path (cons "~/Library/emacs/html-helper-mode" load-path))
-
-;; auto-complete-config
-(add-to-list 'load-path "/Users/yokoi-h/.emacs.d/auto-complete-config")
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "/Users/yokoi-h/.emacs.d/auto-complete-config/ac-dict")
-(ac-config-default)
+(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
 
 
-;; html-helper-mode
-(autoload 'html-helper-mode "html-helper-mode" "Yay HTML" t)
-(setq auto-mode-alist (cons '("\\.html$" . html-helper-mode) auto-mode-alist))
+;;; load-pathを追加する関数を定義
+(defun add-to-load-path (&rest paths)
+  (let (path)
+    (dolist (path paths paths)
+     (let ((default-directory (expand-file-name (concat user-emacs-directory path))))
+        (add-to-list 'load-path default-directory)
+         (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+             (normal-top-level-add-subdirs-to-load-path))))))
 
+;;; ディレクトリをサブディレクトリごとload-pathに追加
+(add-to-load-path "elisp")
 
-;; Color theme
-(require 'color-theme)
-  (eval-after-load "color-theme"
-    '(progn
-      (color-theme-initialize)
-      (color-theme-hober)))
+(autoload 'gtags-mode "gtags" "" t)
+(setq gtags-mode-hook
+      '(lambda ()
+         (local-set-key "\M-t" 'gtags-find-tag)
+         (local-set-key "\M-r" 'gtags-find-rtag)
+         (local-set-key "\M-s" 'gtags-find-symbol)
+         (local-set-key "\C-t" 'gtags-pop-stack)
+         ))
 
-;; Font Settings
-(if (eq window-system 'ns) (progn
-(create-fontset-from-ascii-font "Menlo-15:weight=normal:slant=normal" nil "menlokakugo")
-(set-fontset-font "fontset-menlokakugo" 'unicode (font-spec :family "Hiragino Kaku Gothic ProN" :size 16 ) nil 'append)
-(add-to-list 'default-frame-alist '(font . "fontset-menlokakugo"))
-(setq face-font-rescale-alist '((".*Hiragino.*" . 1.2) (".*Menlo.*" . 1.0)))))
+(add-hook 'c-mode-common-hook
+          '(lambda()
+             (gtags-mode 1)
+             (gtags-make-complete-list)
+             ))
 
+(require 'go-mode-load)
+(add-to-list 'exec-path (expand-file-name "~/workspace/go/bin"))
 
-;; 起動直後のfind-fileのパスを設定する
-; 初期ディレクトリの設定
-(cd "/Users/yokoi-h/Documents")
+;;emacs_nav
+(require 'nav)
+(defun nav-mode-hl-hook ()
+  (local-set-key (kbd "<right>") 'nav-open-file-under-cursor)
+  (local-set-key (kbd "<left>")  'nav-go-up-one-dir)
+  )
+ 
+(add-hook 'nav-mode-hook 'nav-mode-hl-hook)
 
-(add-to-list 'load-path "~/.emacs.d/emacs-deferred")
-(add-to-list 'load-path "~/.emacs.d/emacs-epc")
-(add-to-list 'load-path "~/.emacs.d/emacs-ctable")
-(add-to-list 'load-path "~/.emacs.d/emacs-jedi")
-(require 'python)
-(require 'jedi)
-
-(add-hook 'python-mode-hook 'jedi:setup)
-;;これを入れるとjediを手動<C-tab>で立ち上げないといけない。
-;(setq jedi:setup-keys t)
-(setq jedi:complete-on-dot t)
-
-(defun jedi:stop-all-servers ()
-  (maphash (lambda (_ mngr) (epc:stop-epc mngr))
-           jedi:server-pool--table))
-
-(add-hook 'kill-emacs-hook #'jedi:stop-all-servers)
