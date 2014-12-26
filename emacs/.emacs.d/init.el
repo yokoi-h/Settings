@@ -1,4 +1,4 @@
-(load-theme 'manoj-dark t)
+1(load-theme 'manoj-dark t)
 
 (require 'package)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
@@ -61,3 +61,19 @@
 (global-set-key   [mouse-4] '(lambda () (interactive) (scroll-down 1)))
 (global-set-key   [mouse-5] '(lambda () (interactive) (scroll-up   1)))
 
+(defun gtags-parse-file2 ()
+  (interactive)
+  (if (gtags-get-rootpath)
+      (let*
+          ((root (gtags-get-rootpath))
+           (path (buffer-file-name))
+           (gtags-path-style 'root)
+           (gtags-rootdir root))
+        (if (string-match (regexp-quote root) path)
+            (gtags-goto-tag
+             (replace-match "" t nil path)
+             "f" nil)
+          ;; delegate to gtags-parse-file
+          (gtags-parse-file)))
+    ;; delegate to gtags-parse-file
+    (gtags-parse-file)))
