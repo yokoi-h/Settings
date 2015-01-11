@@ -61,8 +61,12 @@
 (global-set-key   [mouse-4] '(lambda () (interactive) (scroll-down 1)))
 (global-set-key   [mouse-5] '(lambda () (interactive) (scroll-up   1)))
 
+;;grep-find
 (global-set-key (kbd "C-x /") 'grep-find)
+;;mouse-mode
 (global-set-key (kbd "C-x ,") 'xterm-mouse-mode)
+;;backward
+(global-set-key (kbd "s-[") 'pop-global-mark)
 
 
 ;;font settings
