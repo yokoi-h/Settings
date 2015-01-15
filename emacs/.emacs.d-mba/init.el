@@ -1,4 +1,4 @@
-(load-theme 'manoj-dark t)
+(load-theme 'adwaita t)
 
 (require 'package)
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
@@ -48,7 +48,7 @@
   (local-set-key (kbd "<right>") 'nav-open-file-under-cursor)
   (local-set-key (kbd "<left>")  'nav-go-up-one-dir)
   )
- 
+
 (add-hook 'nav-mode-hook 'nav-mode-hl-hook)
 
 (require 'go-autocomplete)
@@ -67,20 +67,22 @@
 (global-set-key (kbd "C-x ,") 'xterm-mouse-mode)
 ;;backward
 (global-set-key (kbd "s-[") 'pop-global-mark)
-
+;;auto-complete-mode
+(global-set-key (kbd "C-x \\") 'auto-complete-mode)
 
 ;;font settings
-(create-fontset-from-ascii-font
- "Source Code Pro-14:weight=normal:slant=normal"
- nil "codekakugo")
-(set-fontset-font "fontset-codekakugo"
-		  'unicode
-		  (font-spec :family "Hiragino Kaku Gothic Pro" :size 16)
-		  nil
-		  'append)
-(add-to-list 'default-frame-alist '(font . "fontset-codekakugo"))
+(when window-system
+  (create-fontset-from-ascii-font "Source Code Pro-16:weight=normal:slant=normal" nil "codekakugo")
+  (set-fontset-font "fontset-codekakugo"
+		    'unicode
+		    (font-spec :family "Hiragino Kaku Gothic Pro" :size 16)
+		    nil
+		    'append)
+  (add-to-list 'default-frame-alist '(font . "fontset-codekakugo"))
+  )
 
 ;;path settings
-(setenv "PATH" "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/apache-ant-1.9.4/bin")
+(setenv "PATH" "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/apache-ant-\
+1.9.4/bin")
 (dolist (path (reverse (split-string (getenv "PATH")":")))
   (add-to-list 'exec-path path))
