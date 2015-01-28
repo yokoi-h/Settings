@@ -86,3 +86,8 @@
 1.9.4/bin")
 (dolist (path (reverse (split-string (getenv "PATH")":")))
   (add-to-list 'exec-path path))
+
+(global-set-key (kbd "C-x p") 'linum-mode)
+(column-number-mode 1)
+(display-time)
+(setq make-backup-files nil )
