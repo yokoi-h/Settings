@@ -5,7 +5,8 @@
 ########################################
 # 環境変数
 export LANG=ja_JP.UTF-8
- 
+export GOPATH=$HOME/workspace/go
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin 
  
 # 色を使用出来るようにする
 autoload -Uz colors
@@ -162,4 +163,6 @@ case ${OSTYPE} in
 esac
  
 # vim:set ft=zsh:
+
+########################################
 
