@@ -4,9 +4,10 @@
  
 ########################################
 # 環境変数
+EMACS=/usr/local/Cellar/emacs/24.5
 export LANG=ja_JP.UTF-8
 export GOPATH=$HOME/workspace/go
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin 
+export PATH=$EMACS/bin:/usr/local/go/bin:$GOPATH/bin:$PATH 
  
 # 色を使用出来るようにする
 autoload -Uz colors
